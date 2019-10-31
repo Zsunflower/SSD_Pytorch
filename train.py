@@ -70,8 +70,8 @@ class Trainer():
         self.model.train()
         total_loss = 0
         for sample in self.train_loader:
-            images = sample('image').to(device)
-            objs   = sample('objs')
+            images = sample['image'].to(device)
+            objs   = sample['objs']
             output = self.model(images)
             labels = self.label_encoder(objs).to(device)
             loss   = self.criterion(output, labels)
@@ -87,8 +87,8 @@ class Trainer():
         self.model.eval()
         total_loss = 0
         for sample in self.eval_loader:
-            images = sample('image').to(device)
-            objs   = sample('objs')
+            images = sample['image'].to(device)
+            objs   = sample['objs']
             output = self.model(images)
             labels = self.label_encoder(objs).to(device)
             loss   = self.criterion(output, labels)
