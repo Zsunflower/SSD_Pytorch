@@ -73,7 +73,7 @@ class Trainer():
             images = sample('image').to(device)
             objs   = sample('objs')
             output = self.model(images)
-            labels = self.label_encoder(objs)
+            labels = self.label_encoder(objs).to(device)
             loss   = self.criterion(output, labels)
             total_loss += loss.item()
 
@@ -90,7 +90,7 @@ class Trainer():
             images = sample('image').to(device)
             objs   = sample('objs')
             output = self.model(images)
-            labels = self.label_encoder(objs)
+            labels = self.label_encoder(objs).to(device)
             loss   = self.criterion(output, labels)
             total_loss += loss.item()
         return total_loss / len(self.eval_loader)
@@ -98,6 +98,7 @@ class Trainer():
 
     def run(self):
         print("Start train model!")
+        print("Device: ", device)
         for epoch in range(self.cfg.num_epochs):
             train_epoch_loss = self.train_on_epoch(epoch)
             eval_epoch_loss  = self.evaluate_on_epoch(epoch)

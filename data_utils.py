@@ -105,7 +105,7 @@ def collate_sample(list_samples):
     image_batched = np.asarray([sample['image'] for sample in list_samples])
     objs_batched  = [sample['objs'] for sample in list_samples]
     filename_batched = [sample['filename'] for sample in list_samples]
-    return {'image': torch.as_tensor(image_batched, dtype=torch.float, device=device),
+    return {'image': torch.as_tensor(image_batched, dtype=torch.float),
             'objs': objs_batched,
             'filename': filename_batched}
     
