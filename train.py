@@ -19,10 +19,10 @@ class Trainer():
         self.parse_config()
     
     def build_model(self):
-        self.model = SSDModel(self.cfg.width, self.cfg.height, self.cfg.nclasses, self.cfg.scales, self.cfg.aspect_ratios)
+        self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, self.cfg.scales, self.cfg.aspect_ratios)
     
     def prepare_data(self):
-        train_aug = SSDDataAugmentation(target_size={'h': self.cfg.height, 'w': self.cfg.width},
+        train_aug = SSDDataAugmentation(target_size={'h': self.cfg.img_height, 'w': self.cfg.img_width},
                                         random_brightness={'low': -48, 'high': 48, 'prob': 0.5},
                                         random_contrast={'low': 0.5, 'high': 1.8, 'prob': 0.5},
                                         random_saturation={'low': 0.5, 'high': 1.8, 'prob': 0.5},
@@ -33,7 +33,7 @@ class Trainer():
                                         prob=0.8,
                                         train=True)
         
-        eval_aug = SSDDataAugmentation(target_size={'h': self.cfg.height, 'w': self.cfg.width},
+        eval_aug = SSDDataAugmentation(target_size={'h': self.cfg.img_height, 'w': self.cfg.img_width},
                                        train=False)        
         train_ds = SSDDataset(self.cfg.data_dir,
                               self.cfg.train_file_path,
@@ -59,7 +59,7 @@ class Trainer():
         self.build_model()
         self.criterion = SSDLoss(self.cfg.alpha, self.cfg.neg_pos_ratio)
         self.label_encoder = SSDLabelEncoder(self.model.generate_anchor_boxes(), 
-                                             self.cfg.nclasses, self.cfg.height, self.cfg.width, variance=self.variances)
+                                             self.cfg.nclasses, self.cfg.img_height, self.cfg.img_width, variance=self.variances)
         self.optimizer = torch.optim.Adam(self.model.parameters())
         if  os.path.exists(self.cfg.checkpoint_dir) and os.path.isdir(self.cfg.checkpoint_dir):
             shutil.rmtree(self.cfg.checkpoint_dir)
