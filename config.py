@@ -13,5 +13,5 @@ class Config:
     batch_size      = 16
     neg_pos_ratio   = 3
     alpha           = 1
-    num_epoches     = 60
+    num_epochs      = 60
     checkpoint_dir  = 'checkpoints'
