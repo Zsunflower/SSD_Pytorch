@@ -20,6 +20,9 @@ class Trainer():
     
     def build_model(self):
         self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        if self.cfg.checkpoint_path:
+            print("Loading checkpoint from: ", self.cfg.checkpoint_path)
+            self.model.load_state_dict(torch.load(self.cfg.checkpoint_path))
     
     def prepare_data(self):
         train_aug = SSDDataAugmentation(target_size={'h': self.cfg.img_height, 'w': self.cfg.img_width},

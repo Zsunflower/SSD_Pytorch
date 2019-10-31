@@ -15,5 +15,5 @@ class Config:
     alpha           = 1
     num_epochs      = 60
     checkpoint_dir  = 'checkpoints'
-    checkpoint_path = ''
+    checkpoint_path = 'ssd_1_6.4616_5.9102.pth'
     
