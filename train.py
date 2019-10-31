@@ -97,7 +97,7 @@ class Trainer():
 
 
     def run(self):
-
+        print("Start train model!")
         for epoch in range(self.cfg.num_epochs):
             train_epoch_loss = self.train_on_epoch(epoch)
             eval_epoch_loss  = self.evaluate_on_epoch(epoch)
