@@ -96,7 +96,7 @@ class SSDModel(nn.Module):
     def get_predictor_shapes(self):
         #Return shape of each predictor layers(4, 5, 6, 7)
         anchor_box_shapes = []
-        x = torch.randn(1, 3, self.height, self.width, device=device)
+        x = torch.randn(1, 3, self.height, self.width)
         y = self.block1(x)
         y = self.mp1(y)
         y = self.block2(y)
