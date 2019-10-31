@@ -63,7 +63,7 @@ class Trainer():
         self.optimizer = torch.optim.Adam(self.model.parameters())
         if  os.path.exists(self.cfg.checkpoint_dir) and os.path.isdir(self.cfg.checkpoint_dir):
             shutil.rmtree(self.cfg.checkpoint_dir)
-        os.makedirs(os.path.join(os.getcwd(), self.cfg.checkpoint_dir), exist_ok=True)
+        os.makedirs(self.cfg.checkpoint_dir, exist_ok=True)
 
 
     def train_on_epoch(self, epoch):
@@ -104,8 +104,8 @@ class Trainer():
             eval_epoch_loss  = self.evaluate_on_epoch(epoch)
             print("Epoch {}, train loss {}, eval loss {}".format(epoch, train_epoch_loss, eval_epoch_loss))
             checkpoint_file = 'ssd_{}_{:.4f}_{:.4f}.pt'.format(epoch, train_epoch_loss, eval_epoch_loss)
-            print(os.path.join(os.getcwd(), self.cfg.checkpoint_dir, checkpoint_file))
-            torch.save(self.model.state_dict(), os.path.join(os.getcwd(), self.cfg.checkpoint_dir, checkpoint_file))
+            print(os.path.join(self.cfg.checkpoint_dir, checkpoint_file))
+            torch.save(self.model.state_dict(), os.path.join(self.cfg.checkpoint_dir, checkpoint_file))
 
 
 if __name__ == '__main__':
