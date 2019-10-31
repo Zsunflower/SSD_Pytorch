@@ -58,7 +58,7 @@ class Trainer():
     def parse_config(self):
         self.build_model()
         self.criterion = SSDLoss(self.cfg.alpha, self.cfg.neg_pos_ratio)
-        self.label_encoder = SSDLabelEncoder(self.model.generate_anchor_boxes(), 
+        self.label_encoder = SSDLabelEncoder(self.model.generate_anchor_boxes(device), 
                                              self.cfg.nclasses, self.cfg.img_height, self.cfg.img_width, variance=self.cfg.variances)
         self.optimizer = torch.optim.Adam(self.model.parameters())
         if  os.path.exists(self.cfg.checkpoint_dir) and os.path.isdir(self.cfg.checkpoint_dir):

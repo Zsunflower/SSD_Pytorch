@@ -93,10 +93,10 @@ class SSDModel(nn.Module):
         prediction = torch.cat([class_concated, boxes_concated], dim=2)     #shape (batch, n4+n5+n6+n7, nclasses + 4)
         return prediction
 
-    def get_predictor_shapes(self):
+    def get_predictor_shapes(self, device):
         #Return shape of each predictor layers(4, 5, 6, 7)
         anchor_box_shapes = []
-        x = torch.randn(1, 3, self.height, self.width)
+        x = torch.randn(1, 3, self.height, self.width, device=device)
         y = self.block1(x)
         y = self.mp1(y)
         y = self.block2(y)
@@ -116,10 +116,10 @@ class SSDModel(nn.Module):
         anchor_box_shapes.append((y.size(2), y.size(3)))
         return anchor_box_shapes
 
-    def generate_anchor_boxes(self):
+    def generate_anchor_boxes(self, device):
         #Generate list anchor boxes for each predictor layer
         #
-        predictor_shapes = self.get_predictor_shapes()
+        predictor_shapes = self.get_predictor_shapes(device)
 
         anchor_boxes = []
         for (predictor_shape, scale) in zip(predictor_shapes, self.scales):
