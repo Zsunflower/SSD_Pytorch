@@ -14,4 +14,6 @@ class Config:
     neg_pos_ratio   = 3
     alpha           = 1
     num_epochs      = 60
-    checkpoint_dir  = './checkpoints'
+    checkpoint_dir  = 'checkpoints'
+    checkpoint_path = ''
+    

@@ -103,8 +103,7 @@ class Trainer():
             train_epoch_loss = self.train_on_epoch(epoch)
             eval_epoch_loss  = self.evaluate_on_epoch(epoch)
             print("Epoch {}, train loss {}, eval loss {}".format(epoch, train_epoch_loss, eval_epoch_loss))
-            checkpoint_file = 'ssd_{}_{:.4f}_{:.4f}.pt'.format(epoch, train_epoch_loss, eval_epoch_loss)
-            print(os.path.join(self.cfg.checkpoint_dir, checkpoint_file))
+            checkpoint_file = 'ssd_{}_{:.4f}_{:.4f}.pth'.format(epoch, train_epoch_loss, eval_epoch_loss)
             torch.save(self.model.state_dict(), os.path.join(self.cfg.checkpoint_dir, checkpoint_file))
 
 
