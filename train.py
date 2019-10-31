@@ -59,7 +59,7 @@ class Trainer():
         self.build_model()
         self.criterion = SSDLoss(self.cfg.alpha, self.cfg.neg_pos_ratio)
         self.label_encoder = SSDLabelEncoder(self.model.generate_anchor_boxes(), 
-                                             self.cfg.nclasses, self.cfg.img_height, self.cfg.img_width, variance=self.variances)
+                                             self.cfg.nclasses, self.cfg.img_height, self.cfg.img_width, variance=self.cfg.variances)
         self.optimizer = torch.optim.Adam(self.model.parameters())
         if  os.path.exists(self.cfg.checkpoint_dir) and os.path.isdir(self.cfg.checkpoint_dir):
             shutil.rmtree(self.cfg.checkpoint_dir)
