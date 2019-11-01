@@ -93,8 +93,8 @@ class Eval:
                 cv2.imwrite(os.path.join(self.cfg.eval_cfg.debug_imgs, os.path.basename(filename)), img)
         print("Eval done!")
         cmd = "python {} -t {} --gtfolder {} --detfolder {} -gtformat xyrb -detformat xyrb --savepath {}".format(self.cfg.eval_cfg.cmd_path,
-                                                                                                                 self.cfg.eval_cfg.threshold, self.cfg.eval_cfg.groundtruths,
-                                                                                                                 self.cfg.eval_cfg.detections, self.cfg.eval_cfg.results)
+                                                                                                                 self.cfg.eval_cfg.threshold, os.path.abspath(self.cfg.eval_cfg.groundtruths),
+                                                                                                                 os.path.abspath(self.cfg.eval_cfg.detections), os.path.abspath(self.cfg.eval_cfg.results))
         print("Runing command: ", cmd)
         os.system(cmd)
 
