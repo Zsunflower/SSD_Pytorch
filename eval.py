@@ -70,7 +70,7 @@ class Eval:
             for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
                 img = cv2.imread(os.path.join(self.cfg.eval_cfg.data_dir, filename))
                 h, w = img.shape[: 2]
-                scaley, scalex = h / img_height, w / img_width
+                scaley, scalex = h / self.cfg.img_height, w / self.cfg.img_width
 
                 f = open(os.path.join(self.cfg.eval_cfg.groundtruths, os.path.basename(filename).split('.')[0] + '.txt'), 'w')
                 for box in label:
