@@ -26,6 +26,7 @@ class EvalConfig:
     iou_threshold   = 0.01
     cmd_path        = '/content/Object-Detection-Metrics/pascalvoc.py'
     
+    
 class Config:
     
     def __init__(self):
