@@ -21,12 +21,12 @@ class Trainer():
     
     def build_model(self):
         self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, self.cfg.scales, self.cfg.aspect_ratios).to(device)
-        if self.cfg.train_cfg.checkpoint_path:
-            if os.path.exists(self.cfg.train_cfg.checkpoint_path):
-                print("Loading checkpoint from: ", self.cfg.train_cfg.checkpoint_path)
-                self.model.load_state_dict(torch.load(self.cfg.train_cfg.checkpoint_path))
-            else:
-                print("Checkpoint file {} don't exists".format(self.cfg.train_cfg.checkpoint_path))
+        checkpoint_path = os.path.join(self.cfg.train_cfg.checkpoint_dir, self.cfg.train_cfg.checkpoint_file)
+        if os.path.exists(checkpoint_path):
+            print("Loading checkpoint from: ", checkpoint_path)
+            self.model.load_state_dict(torch.load(checkpoint_path))
+        else:
+            print("Checkpoint file {} don't exists".format(checkpoint_path))
     
     
     def prepare_data(self):

@@ -18,6 +18,13 @@ class Eval:
     
     def build_model(self):
         self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        checkpoint_path = os.path.join(self.cfg.eval_cfg.checkpoint_dir, self.cfg.eval_cfg.checkpoint_file)
+        if not os.path.exists(checkpoint_path):
+            print("Can't load checkpoint from: ", checkpoint_path)
+        else:
+            print("Eval model from checkpoint: ", checkpoint_path)
+            self.model.load_state_dict(torch.load(checkpoint_path))
+
     
     def prepare_data(self):
         eval_aug = SSDDataAugmentation(target_size={'h': self.cfg.img_height, 'w': self.cfg.img_width}, train=False)  

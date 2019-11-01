@@ -9,7 +9,7 @@ class TrainConfig:
     alpha           = 1
     num_epochs      = 60
     checkpoint_dir  = 'checkpoints'
-    checkpoint_path = 'ssd_1_6.4616_5.9102.pth'
+    checkpoint_file = 'ssd_1_6.4616_5.9102.pth'
     
     
 class EvalConfig:
@@ -17,7 +17,7 @@ class EvalConfig:
     data_dir        = 'data/images'
     batch_size      = 16    
     checkpoint_dir  = 'checkpoints'
-    checkpoint_path = 'ssd_1_6.4616_5.9102.pth'
+    checkpoint_file = 'ssd_58_1.0070_1.3091.pth'
     groundtruths    = 'eval/groundtruths'
     detections      = 'eval/detections'
     results         = 'eval/results'
@@ -25,7 +25,7 @@ class EvalConfig:
     threshold       = 0.5
     iou_threshold   = 0.01
     cmd_path        = '/content/Object-Detection-Metrics/pascalvoc.py'
-    
+
 
 class Config:
     
