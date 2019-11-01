@@ -8,6 +8,8 @@ from data_utils import SSDDataAugmentation, Transpose, Normalization, collate_sa
 from torchvision import transforms
 from decode_utils import decode_output
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
 class Eval:
     
     def __init__(self, cfg):
