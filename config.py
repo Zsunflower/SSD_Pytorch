@@ -26,16 +26,15 @@ class EvalConfig:
     iou_threshold   = 0.01
     cmd_path        = '/content/Object-Detection-Metrics/pascalvoc.py'
     
-    
+
 class Config:
     
-    def __init__(self):
-        img_width       = 512
-        img_height      = 512
-        nclasses        = 1
-        scales          = [0.05167422, 0.08641827, 0.11201055, 0.15300986]
-        aspect_ratios   = [2.15237637, 2.97160099, 3.49238618, 3.97957222, 4.54607464]
-        variances       = [0.1, 0.1, 0.2, 0.2]
-        
-        self.train_cfg = TrainConfig()
-        self.eval_cfg  = EvalConfig()
+    img_width       = 512
+    img_height      = 512
+    nclasses        = 1
+    scales          = [0.05167422, 0.08641827, 0.11201055, 0.15300986]
+    aspect_ratios   = [2.15237637, 2.97160099, 3.49238618, 3.97957222, 4.54607464]
+    variances       = [0.1, 0.1, 0.2, 0.2]
+    
+    train_cfg = TrainConfig()
+    eval_cfg  = EvalConfig()
