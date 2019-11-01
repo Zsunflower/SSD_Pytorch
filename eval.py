@@ -92,5 +92,5 @@ class Eval:
 
 if __name__ == '__main__':
     config = Config()
-    eval   = Eval()
+    eval   = Eval(config)
     eval.run(config)
