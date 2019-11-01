@@ -2,6 +2,7 @@ import torch
 import cv2
 import os
 import shutil
+import numpy as np
 from config import Config
 from model import SSDModel
 from data_utils import SSDDataset, SSDDataAugmentation, Transpose, Normalization, collate_sample
