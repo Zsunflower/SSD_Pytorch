@@ -24,7 +24,7 @@ class EvalConfig:
     debug_imgs      = 'eval/visual_detection'
     threshold       = 0.5
     iou_threshold   = 0.01
-    cmd_path        = '/content/Object-Detection-Metrics/pascalvoc.py'
+    cmd_path        = '../Object-Detection-Metrics/pascalvoc.py'
 
 
 class Config:
