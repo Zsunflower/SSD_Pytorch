@@ -64,7 +64,7 @@ class Eval:
             total += len(batch_images)
             y_pred = self.model(batch_images)
             y_pred = y_pred.cpu().data.numpy()
-            y_pred_decoded = decode_output(y_pred, self.model.generate_anchor_boxes(device), self.cfg.variances, self.cfg.img_width, self.cfg.img_height,
+            y_pred_decoded = decode_output(y_pred, self.model.generate_anchor_boxes(device), self.cfg.variances, self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses
                                            conf_thresh=self.cfg.eval_cfg.threshold, iou_thresh=self.cfg.eval_cfg.iou_threshold)
 
             for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
