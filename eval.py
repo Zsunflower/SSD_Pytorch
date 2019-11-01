@@ -4,7 +4,7 @@ import os
 import shutil
 from config import Config
 from model import SSDModel
-from data_utils import SSDDataAugmentation, Transpose, Normalization, collate_sample
+from data_utils import SSDDataset, SSDDataAugmentation, Transpose, Normalization, collate_sample
 from torchvision import transforms
 from decode_utils import decode_output
 
