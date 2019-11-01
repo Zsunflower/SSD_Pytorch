@@ -26,7 +26,7 @@ class Eval:
             print("Eval model from checkpoint: ", checkpoint_path)
             self.model.load_state_dict(torch.load(checkpoint_path))
 
-    
+
     def prepare_data(self):
         eval_aug = SSDDataAugmentation(target_size={'h': self.cfg.img_height, 'w': self.cfg.img_width}, train=False)  
         eval_ds  = SSDDataset(self.cfg.eval_cfg.data_dir,
@@ -37,7 +37,8 @@ class Eval:
                                                             ]))        
         self.eval_loader  = torch.utils.data.DataLoader(dataset=eval_ds,  batch_size=self.cfg.eval_cfg.batch_size,
                                                         collate_fn=collate_sample, shuffle=False)
-    
+
+
     def parse_config(self):
         self.build_model()
         self.prepare_data()
@@ -91,6 +92,11 @@ class Eval:
                 f.close()
                 cv2.imwrite(os.path.join(self.cfg.eval_cfg.debug_imgs, os.path.basename(filename)), img)
         print("Eval done!")
+        cmd = "python {} -t {} --gtfolder {} --detfolder {} -gtformat xyrb -detformat xyrb --savepath {}".format(self.cfg.eval_cfg.cmd_path,
+                                                                                                                 self.cfg.eval_cfg.threshold, self.cfg.eval_cfg.groundtruths,
+                                                                                                                 self.cfg.eval_cfg.detections, self.cfg.eval_cfg.results)
+        print("Runing command: ", cmd)
+        os.system(cmd)
 
 
 if __name__ == '__main__':
