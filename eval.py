@@ -64,7 +64,7 @@ class Eval:
             total += len(batch_images)
             y_pred = self.model(batch_images)
             y_pred = y_pred.cpu().data.numpy()
-            y_pred_decoded = decode_output(y_pred, self.model.generate_anchor_boxes(), conf_thresh=self.cfg.eval_cfg.threshold, iou_thresh=self.cfg.eval_cfg.iou_threshold)
+            y_pred_decoded = decode_output(y_pred, self.model.generate_anchor_boxes(device), conf_thresh=self.cfg.eval_cfg.threshold, iou_thresh=self.cfg.eval_cfg.iou_threshold)
 
             for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
                 img = cv2.imread(os.path.join(images_dir, filename))
@@ -88,7 +88,8 @@ class Eval:
                     cv2.putText(img, '{:.4f}'.format(box[1]), (b[0], b[1]), font, 1, (0, 0, 255), 2)
                 f.close()
                 cv2.imwrite(os.path.join(self.cfg.eval_cfg.debug_imgs, os.path.basename(filename)), img)
-
+        print("Eval done!")
+        
 
 if __name__ == '__main__':
     config = Config()
