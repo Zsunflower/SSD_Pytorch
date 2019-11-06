@@ -4,7 +4,8 @@ from box_utils import BoxUtils
 
 
 
-def decode_output(output, conf_thresh=0.5, iou_thresh=0.01):
+def decode_output(output, anchor_template, variances, img_width, img_height, n_classes,
+                  conf_thresh=0.5, iou_thresh=0.01):
     #output: output of model (batch_size, nboxes, nclasses + 4)
     #conf_thresh: minimum confidence for treat as a object
     #iou_thresh: every boxes with IOU > iou_thresh will be filtered
