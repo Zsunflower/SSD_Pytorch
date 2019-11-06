@@ -68,7 +68,8 @@ class Eval:
     def run(self):
         step = 0
         total = 0
-        font = cv2.FONT_HERSHEY_SIMPLEX        
+        font = cv2.FONT_HERSHEY_SIMPLEX   
+        self.model.eval()     
         for sample in self.eval_loader:
             batch_images, batch_labels, batch_filenames = sample['image'], sample['objs'], sample['filename']
             batch_images = batch_images.to(device)
