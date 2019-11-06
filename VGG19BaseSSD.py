@@ -16,6 +16,7 @@ class Vgg19BaseSSD(nn.Module):
         self.n_boxes   = len(self.aspect_ratios)
         self.width  = width
         self.height = height
+        self.class_logsoftmax = nn.LogSoftmax(dim=2)
 
         vgg19 = torchvision.models.vgg19(pretrained=True)
         self.vgg19_base = vgg19.features
@@ -56,6 +57,7 @@ class Vgg19BaseSSD(nn.Module):
             classes.append(cls_layer(layer).permute(0, 2, 3, 1).contiguous().view(x.size(0), -1, self.n_classes))
             boxes.append(box_layer(layer).permute(0, 2, 3, 1).contiguous().view(x.size(0), -1, 4))
         classes_concated = torch.cat(classes, dim=1)
+        classes_concated = self.class_logsoftmax(classes_concated)
         boxes_concated   = torch.cat(boxes,   dim=1)
         output = torch.cat([classes_concated, boxes_concated], dim=2)
         return output
