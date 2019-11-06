@@ -55,8 +55,21 @@ class Normalization(object):
         image = (image - self.mean) / self.std
         return {'image': image, 'objs': objs, 'filename': filename}
     
+
+class Normalization2(object):
+    """Rescale the image pixels to a specific range."""
     
+    def __init__(self, mean, std):
+        self.mean = mean
+        self.std  = std
     
+    def __call__(self, sample):
+        image, objs, filename = sample['image'], sample['objs'], sample['filename']
+        image = image.astype(np.float)
+        image = image / 255.0
+        return {'image': image, 'objs': objs, 'filename': filename}
+    
+
 class SSDDataAugmentation(object):
 
     def __init__(self, target_size={'h': 512, 'w': 512},
@@ -97,8 +110,8 @@ class SSDDataAugmentation(object):
         objs = np.concatenate([class_objs, bbs_aug], axis=1)
         return {'image': image, 'objs': objs, 'filename': filename}
 
-    
-    
+
+
 def collate_sample(list_samples):
     #list_samples: list of dictionary {'image': image, 'objs': objs}
     #return: dictionary {'image': np.asarray(list all images), 'objs': list of all objs}
