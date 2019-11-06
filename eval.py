@@ -6,7 +6,7 @@ import numpy as np
 from config import Config
 from model import SSDModel
 from VGG19BaseSSD import Vgg19BaseSSD
-from data_utils import SSDDataset, SSDDataAugmentation, Transpose, Normalization, collate_sample
+from data_utils import SSDDataset, SSDDataAugmentation, Transpose, Normalization, Normalization2, collate_sample
 from torchvision import transforms
 from decode_utils import decode_output
 
