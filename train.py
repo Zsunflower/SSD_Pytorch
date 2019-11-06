@@ -5,6 +5,7 @@ from data_utils import SSDDataset, Transpose, Normalization, SSDDataAugmentation
 from ssd_loss import SSDLoss
 from label_encoder import SSDLabelEncoder
 from model import SSDModel
+from VGG19BaseSSD import Vgg19BaseSSD
 from config import Config
 import numpy as np
 import os
@@ -20,7 +21,15 @@ class Trainer():
         self.parse_config()
     
     def build_model(self):
-        self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        if self.cfg.train_cfg.model_name == 'SSDModel':
+            self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, 
+                                  self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        elif self.cfg.train_cfg.model_name == 'Vgg19BaseSSD':
+            self.model = Vgg19BaseSSD(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, 
+                                      self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        else:
+            raise Exception('Model name not found!')
+
         checkpoint_path = os.path.join(self.cfg.train_cfg.checkpoint_dir, self.cfg.train_cfg.checkpoint_file)
         if os.path.exists(checkpoint_path):
             print("Loading checkpoint from: ", checkpoint_path)

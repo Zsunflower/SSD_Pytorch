@@ -1,6 +1,7 @@
 
 
 class TrainConfig:
+    model_name      = 'Vgg19BaseSSD'
     train_file_path = 'data/ssd_train.pkl'
     eval_file_path  = 'data/ssd_eval.pkl'
     data_dir        = 'data/images'
@@ -13,6 +14,7 @@ class TrainConfig:
     
     
 class EvalConfig:
+    model_name      = 'Vgg19BaseSSD'
     eval_file_path  = 'data/ssd_eval.pkl'
     data_dir        = 'data/images'
     batch_size      = 16    
@@ -28,7 +30,6 @@ class EvalConfig:
 
 
 class Config:
-    
     img_width       = 512
     img_height      = 512
     nclasses        = 1

@@ -5,6 +5,7 @@ import shutil
 import numpy as np
 from config import Config
 from model import SSDModel
+from VGG19BaseSSD import Vgg19BaseSSD
 from data_utils import SSDDataset, SSDDataAugmentation, Transpose, Normalization, collate_sample
 from torchvision import transforms
 from decode_utils import decode_output
@@ -18,7 +19,15 @@ class Eval:
         self.parse_config()
     
     def build_model(self):
-        self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        if self.cfg.eval_cfg.model_name == 'SSDModel':
+            self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, 
+                                  self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        elif self.cfg.eval_cfg.model_name == 'Vgg19BaseSSD':
+            self.model = Vgg19BaseSSD(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, 
+                                      self.cfg.scales, self.cfg.aspect_ratios).to(device)
+        else:
+            raise Exception('Model name not found!')
+        
         checkpoint_path = os.path.join(self.cfg.eval_cfg.checkpoint_dir, self.cfg.eval_cfg.checkpoint_file)
         if not os.path.exists(checkpoint_path):
             print("Can't load checkpoint from: ", checkpoint_path)
