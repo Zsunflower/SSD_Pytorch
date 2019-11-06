@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision import transforms
-from data_utils import SSDDataset, Transpose, Normalization, SSDDataAugmentation, collate_sample
+from data_utils import SSDDataset, Transpose, Normalization, Normalization2, SSDDataAugmentation, collate_sample
 from ssd_loss import SSDLoss
 from label_encoder import SSDLabelEncoder
 from model import SSDModel
