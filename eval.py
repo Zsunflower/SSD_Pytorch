@@ -27,7 +27,7 @@ class Eval:
                                       self.cfg.scales, self.cfg.aspect_ratios).to(device)
         else:
             raise Exception('Model name not found!')
-        
+
         checkpoint_path = os.path.join(self.cfg.eval_cfg.checkpoint_dir, self.cfg.eval_cfg.checkpoint_file)
         if not os.path.exists(checkpoint_path):
             print("Can't load checkpoint from: ", checkpoint_path)
@@ -42,7 +42,7 @@ class Eval:
                               self.cfg.eval_cfg.eval_file_path,
                               transform=transforms.Compose([eval_aug,
                                                             Transpose(),
-                                                            Normalization(127.5, 127.5)
+                                                            Normalization2(127.5, 127.5)
                                                             ]))        
         self.eval_loader  = torch.utils.data.DataLoader(dataset=eval_ds,  batch_size=self.cfg.eval_cfg.batch_size,
                                                         collate_fn=collate_sample, shuffle=False)
