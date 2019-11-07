@@ -20,14 +20,16 @@ class Vgg19BaseSSD(nn.Module):
 
         vgg19 = torchvision.models.vgg19(pretrained=True)
         self.vgg19_base = vgg19.features
-        self.predict_layers_indices = [25, 34]
-        self.in_channels            = [512, 512]
+        self.predict_layers_indices = [20, 25, 34]
+        self.in_channels            = [512, 512, 512]
         class1 = self.create_classes_predict_block(512)
         class2 = self.create_classes_predict_block(512)
+        class3 = self.create_classes_predict_block(512)
         boxes1 = self.create_boxes_predict_block(512)
         boxes2 = self.create_boxes_predict_block(512)
-        self.classes_predict_layer = nn.ModuleList([class1, class2])
-        self.boxes_predict_layer   = nn.ModuleList([boxes1, boxes2])
+        boxes3 = self.create_boxes_predict_block(512)
+        self.classes_predict_layer = nn.ModuleList([class1, class2, class3])
+        self.boxes_predict_layer   = nn.ModuleList([boxes1, boxes2, boxes3])
 
     def create_classes_predict_block(self, in_channels):
         return nn.Conv2d(in_channels=in_channels, out_channels=self.n_classes * self.n_boxes, 
