@@ -17,7 +17,7 @@ class EvalConfig:
     model_name      = 'Vgg19BaseSSD'
     eval_file_path  = 'data/ssd_eval.pkl'
     data_dir        = 'data/images'
-    batch_size      = 16    
+    batch_size      = 16
     checkpoint_dir  = 'checkpoints'
     checkpoint_file = 'ssd_59_4.6727_4.6010.pth'
     groundtruths    = 'eval/groundtruths'
