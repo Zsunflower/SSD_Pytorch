@@ -117,7 +117,6 @@ class Trainer():
     def run(self):
         print("Start train model!")
         print("Device: ", device)
-        self.optimizer.zero_grad()
         for epoch in range(self.cfg.train_cfg.num_epochs):
             train_epoch_loss = self.train_on_epoch(epoch)
             eval_epoch_loss  = self.evaluate_on_epoch(epoch)

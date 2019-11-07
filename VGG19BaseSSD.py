@@ -49,6 +49,7 @@ class Vgg19BaseSSD(nn.Module):
         predict_layers = []
         classes = []
         boxes   = []
+        print(x.shape, len(self.vgg19_base))
         for i, layer in enumerate(self.vgg19_base):
             x = layer(x)
             if i in self.predict_layers_indices:
