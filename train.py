@@ -104,13 +104,14 @@ class Trainer():
     def evaluate_on_epoch(self, epoch):
         self.model.eval()
         total_loss = 0
-        for sample in self.eval_loader:
-            images = sample['image'].to(device)
-            objs   = sample['objs']
-            output = self.model(images)
-            labels = self.label_encoder(objs).to(device)
-            loss   = self.criterion(output, labels)
-            total_loss += loss.item()
+        with torch.no_grad()
+            for sample in self.eval_loader:
+                images = sample['image'].to(device)
+                objs   = sample['objs']
+                output = self.model(images)
+                labels = self.label_encoder(objs).to(device)
+                loss   = self.criterion(output, labels)
+                total_loss += loss.item()
         return total_loss / len(self.eval_loader)
 
 
