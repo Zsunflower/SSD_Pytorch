@@ -86,7 +86,7 @@ class BoxUtils():
         return batch_center
 
     @staticmethod
-    def generate_anchor_boxes_model(self, predictor_shapes, scales, aspect_ratios):
+    def generate_anchor_boxes_model(predictor_shapes, scales, aspect_ratios):
         #Generate list anchor boxes for each predictor layer
 
         anchor_boxes = []
