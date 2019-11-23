@@ -117,9 +117,14 @@ class Eval:
         traced_script_module = torch.jit.trace(cpu_model, example_image)
         traced_script_module.save(model_path)
 
+    def load_model(self, model_path):
+        self.model = torch.jit.load(model_path)
+        self.model = self.model.to('cuda')
+
 
 if __name__ == '__main__':
     config = Config()
     eval   = Eval(config)
-    # eval.run()
-    eval.export('ssd.pth')
+    eval.load_model('ssd.pth')
+    eval.run()
+    # eval.export('ssd.pth')
