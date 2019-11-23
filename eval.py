@@ -9,6 +9,7 @@ from VGG19BaseSSD import Vgg19BaseSSD
 from data_utils import SSDDataset, SSDDataAugmentation, Transpose, Normalization, Normalization2, collate_sample
 from torchvision import transforms
 from decode_utils import decode_output
+from box_utils import BoxUtils
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -77,7 +78,8 @@ class Eval:
             with torch.no_grad():
                 y_pred = self.model(batch_images)
             y_pred = y_pred.cpu().data.numpy()
-            y_pred_decoded = decode_output(y_pred, self.model.generate_anchor_boxes(device), self.cfg.variances, self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses,
+            anchor_boxes = BoxUtils.generate_anchor_boxes([(64, 64), (64, 64), (32, 32)], self.cfg.scales, self.cfg.aspect_ratios)
+            y_pred_decoded = decode_output(y_pred, anchor_boxes, self.cfg.variances, self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses,
                                            conf_thresh=self.cfg.eval_cfg.threshold, iou_thresh=self.cfg.eval_cfg.iou_threshold)
 
             for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
@@ -125,7 +127,6 @@ class Eval:
 if __name__ == '__main__':
     config = Config()
     eval   = Eval(config)
-    print(eval.model.get_predictor_shapes('cuda'))
-    # eval.load_model('ssd.pth')
-    # eval.run()
+    eval.load_model('ssd.pth')
+    eval.run()
     # eval.export('ssd.pth')

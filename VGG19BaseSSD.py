@@ -64,7 +64,7 @@ class Vgg19BaseSSD(nn.Module):
         output = torch.cat([classes_concated, boxes_concated], dim=2)
         return output
 
-    def get_predictor_shapes(self, device):
+    def get_predictor_shapes(self):
         #Return shape of each predictor layers(4, 5, 6, 7)
         anchor_box_shapes = []
         x = torch.randn(1, 3, self.height, self.width, device=device)
@@ -73,15 +73,3 @@ class Vgg19BaseSSD(nn.Module):
             if i in self.predict_layers_indices:
                 anchor_box_shapes.append((x.size(2), x.size(3)))
         return anchor_box_shapes
-
-    def generate_anchor_boxes(self, device):
-        #Generate list anchor boxes for each predictor layer
-        #
-        predictor_shapes = self.get_predictor_shapes(device)
-
-        anchor_boxes = []
-        for (predictor_shape, scale) in zip(predictor_shapes, self.scales):
-            anchor_boxes_predictor = BoxUtils.generate_anchor_boxes(predictor_shape, [scale], self.aspect_ratios)
-            anchor_boxes.append(anchor_boxes_predictor)
-        anchor_boxes = np.concatenate(anchor_boxes, axis=0) #(nboxes, 4)
-        return anchor_boxes
