@@ -19,7 +19,7 @@ class EvalConfig:
     data_dir        = 'data/images'
     batch_size      = 16
     checkpoint_dir  = 'checkpoints'
-    checkpoint_file = 'ssd_50_0.6290_0.7563.pth'
+    checkpoint_file = 'ssd_57_0.4850_0.6215.pth'
     groundtruths    = 'eval/groundtruths'
     detections      = 'eval/detections'
     results         = 'eval/results'
