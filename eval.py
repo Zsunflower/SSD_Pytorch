@@ -78,7 +78,7 @@ class Eval:
             with torch.no_grad():
                 y_pred = self.model(batch_images)
             y_pred = y_pred.cpu().data.numpy()
-            anchor_boxes = BoxUtils.generate_anchor_boxes([(64, 64), (64, 64), (32, 32)], self.cfg.scales, self.cfg.aspect_ratios)
+            anchor_boxes = BoxUtils.generate_anchor_boxes_model([(64, 64), (64, 64), (32, 32)], self.cfg.scales, self.cfg.aspect_ratios)
             y_pred_decoded = decode_output(y_pred, anchor_boxes, self.cfg.variances, self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses,
                                            conf_thresh=self.cfg.eval_cfg.threshold, iou_thresh=self.cfg.eval_cfg.iou_threshold)
 

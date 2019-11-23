@@ -84,3 +84,21 @@ class BoxUtils():
         #(xmin, ymin, width, height) -> (xmin, ymin, xmax, ymax)
         batch_center[:, :, [-2, -1]] += batch_center[:, :, [-4, -3]]
         return batch_center
+
+    @staticmethod
+    def generate_anchor_boxes_model(self, predictor_shapes, scales, aspect_ratios):
+        #Generate list anchor boxes for each predictor layer
+
+        anchor_boxes = []
+        for (predictor_shape, scale) in zip(predictor_shapes, scales):
+            anchor_boxes_predictor = BoxUtils.generate_anchor_boxes(predictor_shape, [scale], aspect_ratios)
+            anchor_boxes.append(anchor_boxes_predictor)
+        anchor_boxes = np.concatenate(anchor_boxes, axis=0) #(nboxes, 4)
+        return anchor_boxes
+
+
+
+
+
+
+
