@@ -64,7 +64,6 @@ class Vgg19BaseSSD(nn.Module):
         output = torch.cat([classes_concated, boxes_concated], dim=2)
         return output
 
-    @torch.jit.export
     def get_predictor_shapes(self, device):
         #Return shape of each predictor layers(4, 5, 6, 7)
         anchor_box_shapes = []
@@ -75,7 +74,6 @@ class Vgg19BaseSSD(nn.Module):
                 anchor_box_shapes.append((x.size(2), x.size(3)))
         return anchor_box_shapes
 
-    @torch.jit.export
     def generate_anchor_boxes(self, device):
         #Generate list anchor boxes for each predictor layer
         #
