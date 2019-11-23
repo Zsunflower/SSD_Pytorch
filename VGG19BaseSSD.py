@@ -73,7 +73,8 @@ class Vgg19BaseSSD(nn.Module):
             if i in self.predict_layers_indices:
                 anchor_box_shapes.append((x.size(2), x.size(3)))
         return anchor_box_shapes
-
+            
+    @torch.jit.export
     def generate_anchor_boxes(self, device):
         #Generate list anchor boxes for each predictor layer
         #
