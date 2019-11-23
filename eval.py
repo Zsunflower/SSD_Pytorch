@@ -110,7 +110,16 @@ class Eval:
         os.system(cmd)
 
 
+    def export(self, model_path):
+        self.model.eval()
+        cpu_model = self.model.to('cpu')
+        example_image = torch.randn((1, 3, self.cfg.img_height, self.cfg.img_width)).to('cpu')
+        traced_script_module = torch.jit.trace(cpu_model, example_image)
+        traced_script_module.save(model_path)
+
+
 if __name__ == '__main__':
     config = Config()
     eval   = Eval(config)
-    eval.run()
+    # eval.run()
+    eval.export('ssd.pth')
