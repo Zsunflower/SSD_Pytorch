@@ -93,7 +93,7 @@ class SSDModel(nn.Module):
         prediction = torch.cat([class_concated, boxes_concated], dim=2)     #shape (batch, n4+n5+n6+n7, nclasses + 4)
         return prediction
 
-    @torch.jit.ignore
+    @torch.jit.export
     def get_predictor_shapes(self, device):
         #Return shape of each predictor layers(4, 5, 6, 7)
         anchor_box_shapes = []
