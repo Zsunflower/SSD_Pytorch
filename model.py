@@ -115,15 +115,3 @@ class SSDModel(nn.Module):
         y = self.block7(y)
         anchor_box_shapes.append((y.size(2), y.size(3)))
         return anchor_box_shapes
-
-    def generate_anchor_boxes(self, device):
-        #Generate list anchor boxes for each predictor layer
-        #
-        predictor_shapes = self.get_predictor_shapes(device)
-
-        anchor_boxes = []
-        for (predictor_shape, scale) in zip(predictor_shapes, self.scales):
-            anchor_boxes_predictor = BoxUtils.generate_anchor_boxes(predictor_shape, [scale], self.aspect_ratios)
-            anchor_boxes.append(anchor_boxes_predictor)
-        anchor_boxes = np.concatenate(anchor_boxes, axis=0) #(nboxes, 4)
-        return anchor_boxes

@@ -14,11 +14,11 @@ from box_utils import BoxUtils
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 class Eval:
-    
+
     def __init__(self, cfg):
         self.cfg = cfg
         self.parse_config()
-    
+
     def build_model(self):
         if self.cfg.eval_cfg.model_name == 'SSDModel':
             self.model = SSDModel(self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses, 
@@ -78,9 +78,11 @@ class Eval:
             with torch.no_grad():
                 y_pred = self.model(batch_images)
             y_pred = y_pred.cpu().data.numpy()
-            anchor_boxes = BoxUtils.generate_anchor_boxes_model([(64, 64), (64, 64), (32, 32)], self.cfg.scales, self.cfg.aspect_ratios)
-            y_pred_decoded = decode_output(y_pred, anchor_boxes, self.cfg.variances, self.cfg.img_width, self.cfg.img_height, self.cfg.nclasses,
-                                           conf_thresh=self.cfg.eval_cfg.threshold, iou_thresh=self.cfg.eval_cfg.iou_threshold)
+            anchor_boxes = BoxUtils.generate_anchor_boxes_model(self.model.get_predictor_shapes(device),
+                                                                self.cfg.scales, self.cfg.aspect_ratios)
+            y_pred_decoded = decode_output(y_pred, anchor_boxes, self.cfg.variances, self.cfg.img_width,
+                                           self.cfg.img_height, self.cfg.nclasses, conf_thresh=self.cfg.eval_cfg.threshold,
+                                           iou_thresh=self.cfg.eval_cfg.iou_threshold)
 
             for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
                 img = cv2.imread(os.path.join(self.cfg.eval_cfg.data_dir, filename))
@@ -118,6 +120,7 @@ class Eval:
         example_image = torch.randn((1, 3, self.cfg.img_height, self.cfg.img_width)).to('cpu')
         traced_script_module = torch.jit.trace(cpu_model, example_image)
         traced_script_module.save(model_path)
+
 
     def load_model(self, model_path):
         self.model = torch.jit.load(model_path)
