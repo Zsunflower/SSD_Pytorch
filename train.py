@@ -76,6 +76,7 @@ class Trainer():
     def parse_config(self):
         self.build_model()
         self.criterion = SSDLoss(self.cfg.train_cfg.alpha, self.cfg.train_cfg.neg_pos_ratio)
+        x = torch.randn(1, 3, self.cfg.img_height, self.cfg.img_width).to(device)
         predictor_shapes = self.model.get_predictor_shapes(device)
         anchor_boxes = BoxUtils.generate_anchor_boxes_model(predictor_shapes, self.cfg.scales, self.cfg.aspect_ratios)
         self.label_encoder = SSDLabelEncoder(anchor_boxes,

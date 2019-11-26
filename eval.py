@@ -70,7 +70,8 @@ class Eval:
         step = 0
         total = 0
         font = cv2.FONT_HERSHEY_SIMPLEX   
-        self.model.eval()     
+        self.model.eval()
+        x = torch.randn(1, 3, self.cfg.img_height, self.cfg.img_width).to(device)
         for sample in self.eval_loader:
             batch_images, batch_labels, batch_filenames = sample['image'], sample['objs'], sample['filename']
             batch_images = batch_images.to(device)
@@ -78,7 +79,7 @@ class Eval:
             with torch.no_grad():
                 y_pred = self.model(batch_images)
             y_pred = y_pred.cpu().data.numpy()
-            anchor_boxes = BoxUtils.generate_anchor_boxes_model(self.model.get_predictor_shapes(device),
+            anchor_boxes = BoxUtils.generate_anchor_boxes_model(self.model.get_predictor_shapes(x),
                                                                 self.cfg.scales, self.cfg.aspect_ratios)
             y_pred_decoded = decode_output(y_pred, anchor_boxes, self.cfg.variances, self.cfg.img_width,
                                            self.cfg.img_height, self.cfg.nclasses, conf_thresh=self.cfg.eval_cfg.threshold,

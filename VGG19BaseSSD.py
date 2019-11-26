@@ -31,6 +31,8 @@ class Vgg19BaseSSD(nn.Module):
         self.classes_predict_layer = nn.ModuleList([class1, class2, class3])
         self.boxes_predict_layer   = nn.ModuleList([boxes1, boxes2, boxes3])
 
+
+
     def create_classes_predict_block(self, in_channels):
         return nn.Conv2d(in_channels=in_channels, out_channels=self.n_classes * self.n_boxes, 
                         kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
@@ -65,10 +67,9 @@ class Vgg19BaseSSD(nn.Module):
         return output
 
     @torch.jit.export
-    def get_predictor_shapes(self):
+    def get_predictor_shapes(self, x):
         #Return shape of each predictor layers
         anchor_box_shapes = []
-        x = torch.randn(1, 3, self.height, self.width)
         for i, layer in enumerate(self.vgg19_base):
             x = layer(x)
             if i in self.predict_layers_indices:
