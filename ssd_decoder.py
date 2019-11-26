@@ -56,7 +56,8 @@ if __name__ == '__main__':
     precitor_shapes = model.get_predictor_shapes(device)
     image = torch.randn(1, 3, config.img_height, config.img_width).to(device)
     ssd_output = model(image)
-
+    ssd_output = ssd_output.to(device)
+    
     ssd_decoder = SSDDecoder(precitor_shapes, config.scales, config.aspect_ratios,
                              config.img_width, config.img_height, config.variances, config.nclasses, 
                              conf_thresh=config.eval_cfg.threshold, iou_thresh=config.eval_cfg.iou_threshold)
