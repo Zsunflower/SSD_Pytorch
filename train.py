@@ -10,6 +10,7 @@ from config import Config
 import numpy as np
 import os
 import shutil
+from box_utils import BoxUtils
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -75,7 +76,9 @@ class Trainer():
     def parse_config(self):
         self.build_model()
         self.criterion = SSDLoss(self.cfg.train_cfg.alpha, self.cfg.train_cfg.neg_pos_ratio)
-        self.label_encoder = SSDLabelEncoder(self.model.generate_anchor_boxes(device), 
+        predictor_shapes = self.model.get_predictor_shapes(device)
+        anchor_boxes = BoxUtils.generate_anchor_boxes_model(predictor_shapes, self.cfg.scales, self.cfg.aspect_ratios)
+        self.label_encoder = SSDLabelEncoder(anchor_boxes,
                                              self.cfg.nclasses, self.cfg.img_height, self.cfg.img_width, 
                                              variance=np.asarray(self.cfg.variances))
         self.optimizer = torch.optim.Adam(self.model.parameters())
