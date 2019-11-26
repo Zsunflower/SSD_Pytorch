@@ -45,7 +45,7 @@ class SSDDecoder(nn.Module):
 
 if __name__ == '__main__':
     config = Config()
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cpu'
 
     if config.eval_cfg.model_name == 'SSDModel':
         model = SSDModel(config.img_width, config.img_height, config.nclasses, config.scales, config.aspect_ratios)
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     image = torch.randn(1, 3, config.img_height, config.img_width).to(device)
     ssd_output = model(image)
     ssd_output = ssd_output.to(device)
-    
+
     ssd_decoder = SSDDecoder(precitor_shapes, config.scales, config.aspect_ratios,
                              config.img_width, config.img_height, config.variances, config.nclasses, 
                              conf_thresh=config.eval_cfg.threshold, iou_thresh=config.eval_cfg.iou_threshold)
