@@ -65,7 +65,7 @@ class Vgg19BaseSSD(nn.Module):
         return output
 
     @torch.jit.export
-    def get_predictor_shapes(self, device):
+    def get_predictor_shapes(self, device='cpu'):
         #Return shape of each predictor layers
         anchor_box_shapes = []
         x = torch.randn(1, 3, self.height, self.width, device=device)
