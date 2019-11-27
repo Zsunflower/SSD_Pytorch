@@ -10,7 +10,7 @@ from box_utils import BoxUtils
 class SSDDecoder(nn.Module):
 
     def __init__(self, predictor_shapes, scales, aspect_ratios,
-                 img_width, img_height, variances, n_classes, conf_thresh=0.5, iou_thresh=0.01):
+                 img_width, img_height, variances):
         super(SSDDecoder, self).__init__()
         size = np.asarray([img_width, img_height, img_width, img_height])
         anchor_boxes = BoxUtils.generate_anchor_boxes_model(predictor_shapes, scales, aspect_ratios) #(nboxes, 4)
@@ -19,9 +19,6 @@ class SSDDecoder(nn.Module):
         self.anchor_template = torch.as_tensor(anchor_boxes, dtype=torch.float)
         self.size = torch.as_tensor(size, dtype=torch.float)
         self.variances = torch.as_tensor(variances, dtype=torch.float)
-        self.conf_thresh = conf_thresh
-        self.iou_thresh = iou_thresh
-        self.n_classes = n_classes
 
 
     def forward(self, output):
@@ -59,7 +56,6 @@ if __name__ == '__main__':
     ssd_output = ssd_output.to(device)
 
     ssd_decoder = SSDDecoder(precitor_shapes, config.scales, config.aspect_ratios,
-                             config.img_width, config.img_height, config.variances, config.nclasses, 
-                             conf_thresh=config.eval_cfg.threshold, iou_thresh=config.eval_cfg.iou_threshold)
+                             config.img_width, config.img_height, config.variances)
     traced = torch.jit.trace(ssd_decoder, ssd_output)
     traced.save('ssd_decoder.pth')
