@@ -8,7 +8,7 @@ from model import SSDModel
 from VGG19BaseSSD import Vgg19BaseSSD
 from data_utils import SSDDataset, SSDDataAugmentation, Transpose, Normalization, Normalization2, collate_sample
 from torchvision import transforms
-from decode_utils import decode_output
+from decode_utils import decode_output, decode_output_decoder
 from box_utils import BoxUtils
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -114,6 +114,50 @@ class Eval:
         print("Runing command: ", cmd)
         os.system(cmd)
 
+    def run_decoder(self, traced):
+        step = 0
+        total = 0
+        font = cv2.FONT_HERSHEY_SIMPLEX   
+        self.model.eval()
+        x = torch.randn(1, 3, self.cfg.img_height, self.cfg.img_width).to(device)
+        for sample in self.eval_loader:
+            batch_images, batch_labels, batch_filenames = sample['image'], sample['objs'], sample['filename']
+            batch_images = batch_images.to(device)
+            total += len(batch_images)
+            with torch.no_grad():
+                y_pred = self.model(batch_images)
+
+            y_pred_decoded = decode_output_decoder(y_pred, traced)
+
+            for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
+                img = cv2.imread(os.path.join(self.cfg.eval_cfg.data_dir, filename))
+                h, w = img.shape[: 2]
+                scaley, scalex = h / self.cfg.img_height, w / self.cfg.img_width
+
+                f = open(os.path.join(self.cfg.eval_cfg.groundtruths, os.path.basename(filename).split('.')[0] + '.txt'), 'w')
+                for box in label:
+                    f.write("{} {} {} {} {}\n".format(int(box[0]), box[1], box[2], box[3], box[4]))
+                    box[1: ] *= [scalex, scaley, scalex, scaley]
+                    box = box.astype(np.int)
+                    img = cv2.rectangle(img, (box[1], box[2]), (box[3], box[4]), (0, 0, 255), 2)
+                f.close()
+
+                f = open(os.path.join(self.cfg.eval_cfg.detections, os.path.basename(filename).split('.')[0] + '.txt'), 'w')
+                for box in yp:
+                    f.write("{0} {1:.4f} {2} {3} {4} {5}\n".format(int(box[0]), box[1], int(box[2]), int(box[3]), int(box[4]), int(box[5])))
+                    box[2: ] *= [scalex, scaley, scalex, scaley]
+                    b = box[2: ].astype(np.int)
+                    img = cv2.rectangle(img, (b[0], b[1]), (b[2], b[3]), (255, 0, 0), 2)
+                    cv2.putText(img, '{:.4f}'.format(box[1]), (b[0], b[1]), font, 1, (0, 0, 255), 2)
+                f.close()
+                cv2.imwrite(os.path.join(self.cfg.eval_cfg.debug_imgs, os.path.basename(filename)), img)
+        print("Eval done!")
+        cmd = "python {} -t {} --gtfolder {} --detfolder {} -gtformat xyrb -detformat xyrb --savepath {}".format(self.cfg.eval_cfg.cmd_path,
+                                                                                                                 self.cfg.eval_cfg.threshold, os.path.abspath(self.cfg.eval_cfg.groundtruths),
+                                                                                                                 os.path.abspath(self.cfg.eval_cfg.detections), os.path.abspath(self.cfg.eval_cfg.results))
+        print("Runing command: ", cmd)
+        os.system(cmd)
+
 
     def export(self, model_path):
         self.model.eval()
@@ -132,5 +176,7 @@ if __name__ == '__main__':
     config = Config()
     eval   = Eval(config)
     eval.load_model('ssd.pth')
-    eval.run()
+    decoder = torch.jit.load('ssd_decoder.pth').to('cuda')
+    eval.run_decoder(decoder)
+
     # eval.export('ssd.pth')

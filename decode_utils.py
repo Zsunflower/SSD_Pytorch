@@ -2,6 +2,33 @@ import numpy as np
 from box_utils import BoxUtils
 
 
+def decode_output_decoder(output, traced, conf_thresh=0.5, iou_thresh=0.01):
+    batch_size = output.size(0)
+    output = traced(output)
+    batch_output = []
+    for output_item in output:
+        boxes_filtered = []
+        #output_item: (nboxes, 6)
+        #filter background
+        output_item = output_item[output_item[:, 0] > 0]
+        output_item = output_item[output_item[:, 1] > conf_thresh]
+        for class_id in range(1, n_classes + 1):
+            #get all boxes with class_id
+            box_class_id = output_item[output_item[:, 0] == class_id]
+            #Perform nms on class id
+            # nms_filtered = nms(box_class_id, iou_thresh)
+            nms_filtered = torchvision.ops.nms(box_class_id[:, -4: ], box_class_id[:, 1], iou_threshold=iou_thresh)
+            nms_filtered = box_class_id[nms_filtered]
+            if len(nms_filtered) > 0:
+                boxes_filtered.extend(nms_filtered)
+            batch_output.append(boxes_filtered)
+    boxes = []
+    for p in batch_output:
+        box = []
+        for b in p:
+            box.append(b.numpy())
+        boxes.append(box)
+    return boxes
 
 
 def decode_output(output, anchor_template, variances, img_width, img_height, n_classes,
