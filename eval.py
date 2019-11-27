@@ -161,22 +161,24 @@ class Eval:
 
     def export(self, model_path):
         self.model.eval()
-        cpu_model = self.model.to('cpu')
-        example_image = torch.randn((1, 3, self.cfg.img_height, self.cfg.img_width)).to('cpu')
+        cpu_model = self.model.to(device)
+        example_image = torch.randn((1, 3, self.cfg.img_height, self.cfg.img_width)).to(device)
         traced_script_module = torch.jit.trace(cpu_model, example_image)
         traced_script_module.save(model_path)
 
 
     def load_model(self, model_path):
         self.model = torch.jit.load(model_path)
-        self.model = self.model.to('cuda')
+        self.model = self.model.to(device)
 
 
 if __name__ == '__main__':
     config = Config()
     eval   = Eval(config)
-    eval.load_model('ssd.pth')
-    decoder = torch.jit.load('ssd_decoder.pth').to('cuda')
-    eval.run_decoder(decoder)
 
-    # eval.export('ssd.pth')
+
+    eval.export('ssd.pth')
+
+    eval.load_model('ssd.pth')
+    decoder = torch.jit.load('ssd_decoder.pth').to(device)
+    eval.run_decoder(decoder)
