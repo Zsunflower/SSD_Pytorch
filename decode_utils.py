@@ -26,7 +26,7 @@ def decode_output_decoder(output, traced, conf_thresh=0.5, iou_thresh=0.01):
     for p in batch_output:
         box = []
         for b in p:
-            box.append(b.numpy())
+            box.append(b.detach().numpy())
         boxes.append(box)
     return boxes
 
