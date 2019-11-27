@@ -126,7 +126,7 @@ class Eval:
             total += len(batch_images)
             with torch.no_grad():
                 y_pred = self.model(batch_images)
-
+            y_pred = y_pred.to('cpu')
             y_pred_decoded = decode_output_decoder(y_pred, traced)
 
             for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
