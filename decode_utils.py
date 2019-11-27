@@ -3,7 +3,6 @@ from box_utils import BoxUtils
 
 
 def decode_output_decoder(output, traced, conf_thresh=0.5, iou_thresh=0.01):
-    output = output.to('cuda')
     batch_size = output.size(0)
     output = traced(output)
     batch_output = []

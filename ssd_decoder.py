@@ -42,7 +42,7 @@ class SSDDecoder(nn.Module):
 
 if __name__ == '__main__':
     config = Config()
-    device = 'cuda'
+    device = 'cpu'
 
     if config.eval_cfg.model_name == 'SSDModel':
         model = SSDModel(config.img_width, config.img_height, config.nclasses, config.scales, config.aspect_ratios)

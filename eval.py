@@ -180,5 +180,5 @@ if __name__ == '__main__':
     eval.export('ssd.pth')
 
     eval.load_model('ssd.pth')
-    decoder = torch.jit.load('ssd_decoder.pth').to(device)
+    decoder = torch.jit.load('ssd_decoder.pth')
     eval.run_decoder(decoder)
