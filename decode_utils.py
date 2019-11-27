@@ -12,7 +12,7 @@ def decode_output_decoder(output, traced, conf_thresh=0.5, iou_thresh=0.01):
         #filter background
         output_item = output_item[output_item[:, 0] > 0]
         output_item = output_item[output_item[:, 1] > conf_thresh]
-        for class_id in range(1, n_classes + 1):
+        for class_id in range(1, 1 + 1):
             #get all boxes with class_id
             box_class_id = output_item[output_item[:, 0] == class_id]
             #Perform nms on class id
