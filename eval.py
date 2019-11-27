@@ -131,5 +131,6 @@ class Eval:
 if __name__ == '__main__':
     config = Config()
     eval   = Eval(config)
-    # eval.run()
-    eval.export('ssd.pth')
+    eval.load_model('ssd.pth')
+    eval.run()
+    # eval.export('ssd.pth')

@@ -50,7 +50,8 @@ if __name__ == '__main__':
         model = Vgg19BaseSSD(config.img_width, config.img_height, config.nclasses, config.scales, config.aspect_ratios)
 
     model = model.to(device)
-    precitor_shapes = model.get_predictor_shapes(device)
+    x = torch.randn(1, 3, config.img_height, config.img_width).to(device)
+    precitor_shapes = model.get_predictor_shapes(x)
     image = torch.randn(1, 3, config.img_height, config.img_width).to(device)
     ssd_output = model(image)
     ssd_output = ssd_output.to(device)
