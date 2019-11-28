@@ -11,7 +11,8 @@ from torchvision import transforms
 from decode_utils import decode_output, decode_output_decoder
 from box_utils import BoxUtils
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = 'cpu'
 
 class Eval:
 
