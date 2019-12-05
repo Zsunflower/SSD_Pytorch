@@ -182,4 +182,5 @@ if __name__ == '__main__':
     eval.load_model('models/ssd.pth')
     decoder = torch.jit.load('models/ssd_decoder.pth')
     nms = torch.jit.load('models/nms.pth')
+    print(nms)
     eval.run_decoder(decoder, nms)
