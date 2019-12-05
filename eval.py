@@ -177,10 +177,9 @@ if __name__ == '__main__':
     config = Config()
     eval   = Eval(config)
 
+    # eval.export('ssd.pth')
 
-    eval.export('ssd.pth')
-
-    eval.load_model('ssd.pth')
-    decoder = torch.jit.load('ssd_decoder.pth')
-    nms = torch.jit.load('nms.pth')
+    eval.load_model('models/ssd.pth')
+    decoder = torch.jit.load('models/ssd_decoder.pth')
+    nms = torch.jit.load('models/nms.pth')
     eval.run_decoder(decoder, nms)
