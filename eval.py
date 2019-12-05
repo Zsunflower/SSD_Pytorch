@@ -115,7 +115,7 @@ class Eval:
         print("Runing command: ", cmd)
         os.system(cmd)
 
-    def run_decoder(self, traced):
+    def run_decoder(self, traced, nms):
         step = 0
         total = 0
         font = cv2.FONT_HERSHEY_SIMPLEX   
@@ -128,7 +128,7 @@ class Eval:
             with torch.no_grad():
                 y_pred = self.model(batch_images)
             y_pred = y_pred.to('cpu')
-            y_pred_decoded = decode_output_decoder(y_pred, traced)
+            y_pred_decoded = decode_output_decoder(y_pred, traced, nms)
 
             for (yp, label, filename) in zip(y_pred_decoded, batch_labels, batch_filenames):
                 img = cv2.imread(os.path.join(self.cfg.eval_cfg.data_dir, filename))
@@ -182,4 +182,5 @@ if __name__ == '__main__':
 
     eval.load_model('ssd.pth')
     decoder = torch.jit.load('ssd_decoder.pth')
-    eval.run_decoder(decoder)
+    nms = torch.jit.load('nms.pth')
+    eval.run_decoder(decoder, nms)

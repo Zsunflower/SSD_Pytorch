@@ -2,7 +2,7 @@ import numpy as np
 from box_utils import BoxUtils
 import torchvision
 
-def decode_output_decoder(output, traced, conf_thresh=0.5, iou_thresh=0.01):
+def decode_output_decoder(output, traced, conf_thresh=0.5, nms, iou_thresh=0.01):
     batch_size = output.size(0)
     output = traced(output)
     batch_output = []
@@ -16,9 +16,9 @@ def decode_output_decoder(output, traced, conf_thresh=0.5, iou_thresh=0.01):
             #get all boxes with class_id
             box_class_id = output_item[output_item[:, 0] == class_id]
             #Perform nms on class id
-            # nms_filtered = nms(box_class_id, iou_thresh)
-            nms_filtered = torchvision.ops.nms(box_class_id[:, -4: ], box_class_id[:, 1], iou_threshold=iou_thresh)
-            nms_filtered = box_class_id[nms_filtered]
+            # nms_filtered = torchvision.ops.nms(box_class_id[:, -4: ], box_class_id[:, 1], iou_threshold=iou_thresh)
+            # nms_filtered = box_class_id[nms_filtered]
+            nms_filtered = nms(box_class_id)
             if len(nms_filtered) > 0:
                 boxes_filtered.extend(nms_filtered)
             batch_output.append(boxes_filtered)
