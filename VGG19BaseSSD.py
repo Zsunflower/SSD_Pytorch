@@ -7,15 +7,11 @@ from box_utils import BoxUtils
 
 class Vgg19BaseSSD(nn.Module):
 
-    def __init__(self,  width, height, n_classes, scales, aspect_ratios):
+    def __init__(self, n_classes, n_boxes):
         super(Vgg19BaseSSD, self).__init__()
         n_classes   = n_classes + 1
-        self.scales = scales
-        self.aspect_ratios = aspect_ratios
         self.n_classes = n_classes
-        self.n_boxes   = len(self.aspect_ratios)
-        self.width  = width
-        self.height = height
+        self.n_boxes   = n_boxes
         self.class_logsoftmax = nn.LogSoftmax(dim=2)
 
         vgg19 = torchvision.models.vgg19(pretrained=True)

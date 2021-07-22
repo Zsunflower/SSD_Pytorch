@@ -8,24 +8,30 @@ from box_utils import BoxUtils
 
 
 class SSDDecoder(nn.Module):
-
-    def __init__(self, predictor_shapes, scales, aspect_ratios,
-                 img_width, img_height, variances):
+    def __init__(
+        self, predictor_shapes, scales, aspect_ratios, img_width, img_height, variances
+    ):
         super(SSDDecoder, self).__init__()
         size = np.asarray([img_width, img_height, img_width, img_height])
-        anchor_boxes = BoxUtils.generate_anchor_boxes_model(predictor_shapes, scales, aspect_ratios) #(nboxes, 4)
-        anchor_boxes = np.expand_dims(anchor_boxes, axis=0) #(1, nboxes, 4)
-        anchor_boxes = BoxUtils.corner2center(anchor_boxes) #(cx, cy, w, h)
+        anchor_boxes = BoxUtils.generate_anchor_boxes_model(
+            predictor_shapes, scales, aspect_ratios
+        )  # (nboxes, 4)
+        anchor_boxes = np.expand_dims(anchor_boxes, axis=0)  # (1, nboxes, 4)
+        anchor_boxes = BoxUtils.corner2center(anchor_boxes)  # (cx, cy, w, h)
         self.anchor_template = torch.as_tensor(anchor_boxes, dtype=torch.float)
         self.size = torch.as_tensor(size, dtype=torch.float)
         self.variances = torch.as_tensor(variances, dtype=torch.float)
 
-
     def forward(self, output):
-        #output (batch, nboxes, nclasses + 4)
+        # output (batch, nboxes, nclasses + 4)
         output[:, :, [-4, -3, -2, -1]] *= self.variances
-        output[:, :, [-4, -3]] = output[:, :, [-4, -3]] * self.anchor_template[:, :, [-2, -1]] + self.anchor_template[:, :, [-4, -3]]
-        output[:, :, [-2, -1]] = torch.exp(output[:, :, [-2, -1]]) * self.anchor_template[:, :, [-2, -1]]
+        output[:, :, [-4, -3]] = (
+            output[:, :, [-4, -3]] * self.anchor_template[:, :, [-2, -1]]
+            + self.anchor_template[:, :, [-4, -3]]
+        )
+        output[:, :, [-2, -1]] = (
+            torch.exp(output[:, :, [-2, -1]]) * self.anchor_template[:, :, [-2, -1]]
+        )
 
         output[:, :, [-4, -3]] -= output[:, :, [-2, -1]] / 2.0
         output[:, :, [-2, -1]] += output[:, :, [-4, -3]]
@@ -33,21 +39,35 @@ class SSDDecoder(nn.Module):
         output[:, :, -4:] *= self.size
         output[:, :, :-4] = torch.exp(output[:, :, :-4])
         probs_max, class_max = torch.max(output[:, :, :-4], dim=-1)
-        class_max = torch.unsqueeze(class_max, dim=-1) #(batch, nboxes, 1)
-        probs_max = torch.unsqueeze(probs_max, dim=-1) #(batch, nboxes, 1)
+        class_max = torch.unsqueeze(class_max, dim=-1)  # (batch, nboxes, 1)
+        probs_max = torch.unsqueeze(probs_max, dim=-1)  # (batch, nboxes, 1)
         class_max = class_max.type(output.dtype)
-        output = torch.cat([class_max, probs_max, output[:, :, -4:]], dim=-1) #(batch, nboxes, 6) (class_id, conf, xmin, ymin, xmax, ymax)
+        output = torch.cat(
+            [class_max, probs_max, output[:, :, -4:]], dim=-1
+        )  # (batch, nboxes, 6) (class_id, conf, xmin, ymin, xmax, ymax)
         return output
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     config = Config()
-    device = 'cpu'
+    device = "cpu"
 
-    if config.eval_cfg.model_name == 'SSDModel':
-        model = SSDModel(config.img_width, config.img_height, config.nclasses, config.scales, config.aspect_ratios)
-    elif config.eval_cfg.model_name == 'Vgg19BaseSSD':
-        model = Vgg19BaseSSD(config.img_width, config.img_height, config.nclasses, config.scales, config.aspect_ratios)
+    if config.eval_cfg.model_name == "SSDModel":
+        model = SSDModel(
+            config.img_width,
+            config.img_height,
+            config.nclasses,
+            config.scales,
+            config.aspect_ratios,
+        )
+    elif config.eval_cfg.model_name == "Vgg19BaseSSD":
+        model = Vgg19BaseSSD(
+            config.img_width,
+            config.img_height,
+            config.nclasses,
+            config.scales,
+            config.aspect_ratios,
+        )
 
     model = model.to(device)
     x = torch.randn(1, 3, config.img_height, config.img_width).to(device)
@@ -56,7 +76,13 @@ if __name__ == '__main__':
     ssd_output = model(image)
     ssd_output = ssd_output.to(device)
 
-    ssd_decoder = SSDDecoder(precitor_shapes, config.scales, config.aspect_ratios,
-                             config.img_width, config.img_height, config.variances)
+    ssd_decoder = SSDDecoder(
+        precitor_shapes,
+        config.scales,
+        config.aspect_ratios,
+        config.img_width,
+        config.img_height,
+        config.variances,
+    )
     traced = torch.jit.trace(ssd_decoder, ssd_output)
-    traced.save('ssd_decoder.pth')
+    traced.save("ssd_decoder.pth")

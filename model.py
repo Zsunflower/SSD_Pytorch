@@ -6,19 +6,13 @@ from box_utils import BoxUtils
 
 class SSDModel(nn.Module):
 
-    def __init__(self, width, height, n_classes, scales, aspect_ratios):
+    def __init__(self, n_classes, n_boxes):
         #(height, width): size of input images
         #n_classes: Number of positive classes
-        #scales: list of scales per predictor layer
-        #aspect_ratios: list of ratios
         super(SSDModel, self).__init__()
         n_classes   = n_classes + 1
-        self.scales = scales
-        self.aspect_ratios = aspect_ratios
         self.n_classes = n_classes
-        self.n_boxes   = len(self.aspect_ratios)
-        self.width  = width
-        self.height = height
+        self.n_boxes   = n_boxes
 
         self.block1 = self.create_block(3 , 32, (5, 5), (2, 2))
         self.mp1    = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))

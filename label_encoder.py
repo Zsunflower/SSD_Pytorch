@@ -3,7 +3,6 @@ import torch
 from box_utils import BoxUtils
 
 
-
 class SSDLabelEncoder():
     #Encode ground truth boxes to format match output of the model
     def __init__(self, anchor_boxes_template, nclasses, img_height, img_width,
@@ -22,7 +21,6 @@ class SSDLabelEncoder():
         class_one_hot[:, 0] = 1 #Default all anchor boxes are background
         output_template = np.concatenate([class_one_hot, anchor_boxes_template], axis=-1) #shape (nboxes, nclasses + 4)
         self.output_template = np.expand_dims(output_template, axis=0) #shape (1, nboxes, nclasses + 4)
-
         self.class_one_hots = np.eye(self.nclasses) #one hot vector for each class (nclasses, nclasses)
 
     def bipartite_match(self, similarities_):
@@ -67,7 +65,6 @@ class SSDLabelEncoder():
         #return: anchor boxes labeled
         batch_size = len(ground_truth_boxes)
         output = np.tile(self.output_template, (batch_size, 1, 1)) #(batch_size, nboxes, nclasses + 4)
-        # output = self.generate_output_template(batch_size)
         for i in range(batch_size):
             label_i = ground_truth_boxes[i].astype(np.float) #(M, 5)
             if len(label_i) < 1:
