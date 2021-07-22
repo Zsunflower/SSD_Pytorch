@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from box_utils import BoxUtils
+from utils.box_utils import BoxUtils
 
 
 class SSDLabelEncoder():

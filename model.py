@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from box_utils import BoxUtils
+from utils.box_utils import BoxUtils
 
 
 class SSDModel(nn.Module):

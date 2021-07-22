@@ -16,7 +16,7 @@ from config import Config
 import numpy as np
 import os
 import shutil
-from box_utils import BoxUtils
+from utils.box_utils import BoxUtils
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
